@@ -1,0 +1,8 @@
+1.在下面的链接下载专门的运行库↓↓↓↓↓↓
+https://khar.lanzouu.com/iJHtw3ruwjah
+密码:61td
+
+2.把它放进目录
+
+3.运行 start.cmd / start.sh
+（建议使用管理员模式运行或给予root权限）
