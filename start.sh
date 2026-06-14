@@ -9,6 +9,31 @@
 DIR="$(cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 cd "$DIR"
 
+if [ ! -d ./bin ]; then
+	if [ -f ./bin.tar.gz ]; then
+		echo "[INFO] bin folder not found. Extracting bin.tar.gz..."
+		if ! command -v tar >/dev/null 2>&1; then
+			echo "[ERROR] Couldn't find tar to extract bin.tar.gz."
+			exit 1
+		fi
+		if ! tar -xzf ./bin.tar.gz; then
+			echo "[ERROR] Failed to extract bin.tar.gz."
+			exit 1
+		fi
+		if [ ! -d ./bin ]; then
+			echo "[ERROR] bin.tar.gz did not contain a bin folder."
+			exit 1
+		fi
+	fi
+fi
+
+if [ -f ./bin/php7/bin/php.ini ]; then
+	PHP7_EXTENSION_DIR="$DIR/bin/php7/lib/php/extensions/no-debug-zts-20200930"
+	if [ -d "$PHP7_EXTENSION_DIR" ]; then
+		sed -i "s|^extension_dir=.*|extension_dir=$PHP7_EXTENSION_DIR|" ./bin/php7/bin/php.ini
+	fi
+fi
+
 # Loop starting
 # Do not edit without knowing what are you doing!
 

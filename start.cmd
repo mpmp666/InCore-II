@@ -2,6 +2,29 @@
 TITLE Genisys server software for Minecraft: Pocket Edition
 cd /d %~dp0
 
+if not exist "bin\" (
+	if exist "bin.tar.gz" (
+		echo "[INFO] bin folder not found. Extracting bin.tar.gz..."
+		where tar >nul 2>nul
+		if errorlevel 1 (
+			echo "[ERROR] Couldn't find tar.exe to extract bin.tar.gz."
+			pause
+			exit /b 1
+		)
+		tar -xzf "bin.tar.gz"
+		if errorlevel 1 (
+			echo "[ERROR] Failed to extract bin.tar.gz."
+			pause
+			exit /b 1
+		)
+		if not exist "bin\" (
+			echo "[ERROR] bin.tar.gz did not contain a bin folder."
+			pause
+			exit /b 1
+		)
+	)
+)
+
 if exist bin\php\php.exe (
 	set PHPRC=""
 	set PHP_BINARY=bin\php\php.exe
