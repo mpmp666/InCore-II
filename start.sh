@@ -9,21 +9,67 @@
 DIR="$(cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 cd "$DIR"
 
+BIN_DOWNLOAD_URL="https://khar.lanzouu.com/iJHtw3ruwjah"
+
+has_linux_sg_extension() {
+	if [ ! -d ./bin/php7/lib/php/extensions ]; then
+		return 1
+	fi
+
+	test -n "$(find ./bin/php7/lib/php/extensions -type f -name 'ixed.*.lin' -print -quit 2>/dev/null)"
+}
+
+print_missing_bin_archive() {
+	echo "[ERROR] Current runtime is missing bin.tar.gz."
+	echo "[ERROR] Download bin.tar.gz from:"
+	echo "[ERROR] $BIN_DOWNLOAD_URL"
+}
+
+extract_bin_archive() {
+	if ! command -v tar >/dev/null 2>&1; then
+		echo "[ERROR] Couldn't find tar to extract bin.tar.gz."
+		exit 1
+	fi
+
+	if [ "$1" = "replace" ]; then
+		if ! rm -rf ./bin; then
+			echo "[ERROR] Failed to remove the old bin folder."
+			exit 1
+		fi
+	fi
+
+	if ! tar -xzf ./bin.tar.gz; then
+		echo "[ERROR] Failed to extract bin.tar.gz."
+		exit 1
+	fi
+
+	if [ ! -d ./bin ]; then
+		echo "[ERROR] bin.tar.gz did not contain a bin folder."
+		exit 1
+	fi
+}
+
 if [ ! -d ./bin ]; then
 	if [ -f ./bin.tar.gz ]; then
 		echo "[INFO] bin folder not found. Extracting bin.tar.gz..."
-		if ! command -v tar >/dev/null 2>&1; then
-			echo "[ERROR] Couldn't find tar to extract bin.tar.gz."
+		extract_bin_archive
+		if ! has_linux_sg_extension; then
+			echo "[ERROR] bin.tar.gz did not contain the Linux SourceGuardian extension."
 			exit 1
 		fi
-		if ! tar -xzf ./bin.tar.gz; then
-			echo "[ERROR] Failed to extract bin.tar.gz."
+	fi
+elif ! has_linux_sg_extension; then
+	echo "[WARN] Linux SourceGuardian extension not found in ./bin/php7/lib/php/extensions."
+	if [ -f ./bin.tar.gz ]; then
+		echo "[INFO] Replacing bin folder with bin.tar.gz..."
+		extract_bin_archive replace
+		if ! has_linux_sg_extension; then
+			echo "[ERROR] bin.tar.gz did not contain the Linux SourceGuardian extension."
 			exit 1
 		fi
-		if [ ! -d ./bin ]; then
-			echo "[ERROR] bin.tar.gz did not contain a bin folder."
-			exit 1
-		fi
+	else
+		print_missing_bin_archive
+		exit 1
 	fi
 fi
 
