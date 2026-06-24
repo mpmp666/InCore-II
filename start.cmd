@@ -37,6 +37,7 @@ cls
 echo "[ERROR] Current runtime is missing bin.tar.gz."
 echo "[ERROR] Download bin.tar.gz from:"
 echo "[ERROR] %BIN_DOWNLOAD_URL%"
+echo "[ERROR] Password: 61td"
 echo.
 echo "[INFO] Please place bin.tar.gz in the same directory as this script."
 echo "[INFO] Waiting for bin.tar.gz to appear..."
