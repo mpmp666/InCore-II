@@ -23,6 +23,7 @@ print_missing_bin_archive() {
 	echo "[ERROR] Current runtime is missing bin.tar.gz."
 	echo "[ERROR] Download bin.tar.gz from:"
 	echo "[ERROR] $BIN_DOWNLOAD_URL"
+	echo "[ERROR] Password: 61td"
 }
 
 extract_bin_archive() {
